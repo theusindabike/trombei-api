@@ -1,0 +1,15 @@
+DEBUG=True
+SECRET_KEY=foo
+DJANGO_ALLOWED_HOSTS=127.0.0.1, 0.0.0.0
+
+DJANGO_SUPERUSER_EMAIL=mlopes.matheus@gmail.com
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_PASSWORD=mudar123
+
+DATABASE=postgres
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=postgres
+SQL_USER=postgres
+SQL_PASSWORD=postgres
+SQL_HOST=db
+SQL_PORT=5432

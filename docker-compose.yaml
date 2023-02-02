@@ -1,0 +1,23 @@
+services:
+  web:
+    container_name: trombei_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+        sh -c "
+          python manage.py collectstatic --no-input &&
+          python manage.py migrate &&
+          python manage.py runserver 0.0.0.0:80
+        "
+    volumes:
+      - static_files:/vol/static_files/static
+      - media:/vol/media
+      - .:/api
+    ports:
+      - "80:80"
+    env_file:
+      - ./.env
+volumes:
+  static_files:
+  media:

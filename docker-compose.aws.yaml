@@ -1,0 +1,65 @@
+services:
+  web:
+    container_name: trombei_api
+    build:
+      context: .
+      dockerfile: Dockerfile.aws
+    #image: 282716734535.dkr.ecr.sa-east-1.amazonaws.com/vinttem-api-ec2-ecr:web
+    command: >
+        sh -c "
+          python manage.py collectstatic --no-input &&
+          gunicorn --bind :8000 trombei_api.wsgi:application
+                              --workers=2 --threads=4
+        "
+    volumes:
+      - static_files:/vol/static_files/static
+      - media:/vol/media
+    expose:
+      - 8000
+    env_file:
+      - ./.env.aws
+
+  proxy:
+    container_name: nginx_proxy
+    build:
+      context: ./proxy
+    #image: 282716734535.dkr.ecr.sa-east-1.amazonaws.com/vinttem-api-ec2-ecr:proxy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - static_files:/vol/static_files/static
+      - media:/vol/media
+      - proxy-dhparams:/vol/proxy
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt
+    env_file:
+      - ./.env.aws
+    environment:
+      - DOMAIN=${DOMAIN}
+    depends_on:
+      - web
+
+  certbot:
+    container_name: certbot
+    build:
+      context: ./proxy/certbot
+    command: echo "Skipping..."
+    env_file:
+      - ./.env.aws
+    environment:
+      - ACME_DEFAULT_EMAIL=${ACME_DEFAULT_EMAIL}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt
+    depends_on:
+      - proxy
+
+volumes:
+  static_files:
+  media:
+  proxy-dhparams:
+  certbot-web:
+  certbot-certs:

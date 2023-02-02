@@ -1,0 +1,93 @@
+[
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000001",
+    "fields": {
+      "owner": 1,
+      "title": "event title 1",
+      "content": "event content 1",
+      "status": "DRAFT",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-04-01T19:43:16.058Z",
+      "created_at": "2022-04-01T19:43:16.058Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000002",
+    "fields": {
+      "owner": 1,
+      "title": "event title 2",
+      "content": "event content 2",
+      "status": "DRAFT",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-04-01T19:51:40.496Z",
+      "created_at": "2022-04-01T19:51:40.496Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000003",
+    "fields": {
+      "owner": 1,
+      "title": "event title 3",
+      "content": "event content 3",
+      "status": "DRAFT",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-05-01T20:00:11.789Z",
+      "created_at": "2022-05-01T20:00:11.789Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000004",
+    "fields": {
+      "owner": 1,
+      "title": "event title 4",
+      "content": "event content 4",
+      "status": "DRAFT",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-06-01T23:33:01.945Z",
+      "created_at": "2022-06-01T23:33:01.945Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000005",
+    "fields": {
+      "owner": 1,
+      "title": "event title 5",
+      "content": "event content 5",
+      "status": "DRAFT",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-06-02T19:37:29.791Z",
+      "created_at": "2022-06-02T19:37:29.791Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000006",
+    "fields": {
+      "owner": 2,
+      "title": "event title 6",
+      "content": "event content 6",
+      "status": "DRAFT",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-06-03T20:12:52.437Z",
+      "created_at": "2022-06-03T20:12:52.437Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000007",
+    "fields": {
+      "owner": 1,
+      "title": "event title 7",
+      "content": "event content 7",
+      "status": "DRAFT",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-07-01T17:26:41.134Z",
+      "created_at": "2022-07-01T17:26:41.134Z"
+    }
+  }
+]

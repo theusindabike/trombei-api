@@ -1,0 +1,68 @@
+services:
+  web:
+    container_name: trombei_api
+    build:
+      context: .
+      dockerfile: Dockerfile.staging
+    command: >
+        sh -c "
+          python manage.py collectstatic --no-input &&
+          python manage.py makemigrations &&
+          python manage.py migrate &&
+          gunicorn --bind :8000 trombei_api.wsgi:application
+                              --workers=2 --threads=4
+                              --reload
+        "
+    volumes:
+      - static_files:/vol/static_files/static
+      - media:/vol/media
+    expose:
+      - 8000
+    env_file:
+      - ./.env
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    container_name: trombei_db
+    image: postgres:12-alpine
+    restart: always
+    volumes:
+      - ./dev-postgres-data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=dev-postgres-db
+      - POSTGRES_USER=postgresuser
+      - POSTGRES_PASSWORD=postgrespassword
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "dev-postgres-db", "-U", "postgresuser"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  proxy:
+    container_name: nginx_proxy
+    build:
+      context: ./proxy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - static_files:/vol/static_files/static
+      - media:/vol/media
+      - proxy-dhparams:/vol/proxy
+    env_file:
+      - ./.env
+    environment:
+      - DOMAIN=${DOMAIN}
+    depends_on:
+      - web
+
+volumes:
+  static_files:
+  media:
+  dev-postgres-data:
+  proxy-dhparams:

@@ -1,0 +1,53 @@
+# temp stage
+FROM python:3.11.1-alpine3.17 as builder
+
+WORKDIR /tmp-pip-dir
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+COPY requirements.txt .
+
+RUN python -m venv /venv && \
+    apk add --update --no-cache --virtual .tmp-build-deps \
+        build-base postgresql-dev musl-dev linux-headers && \
+    /venv/bin/pip install --upgrade pip && \
+    /venv/bin/pip install --upgrade wheel && \
+    /venv/bin/pip wheel --no-cache-dir --no-deps --wheel-dir /tmp-pip-dir/wheels -r requirements.txt && \
+    apk del .tmp-build-deps
+
+# final stage
+FROM python:3.11.1-alpine3.17
+
+WORKDIR /api
+
+COPY --from=builder /tmp-pip-dir/wheels /wheels
+COPY --from=builder /tmp-pip-dir/requirements.txt .
+
+RUN python -m venv /venv && \
+    apk add --update --no-cache postgresql-client && \
+    /venv/bin/pip install install --no-cache /wheels/*
+
+COPY . /api
+
+RUN addgroup \
+        --gid 1001 \
+        --system \
+        trombei-prod-group && \
+    adduser \
+        --no-create-home \
+        --shell /bin/false \
+        --disabled-password \
+        --uid 1001 \
+        --system \
+        -G trombei-prod-group \
+        trombei-prod-user && \
+    mkdir -p /vol/media && \
+    mkdir -p /vol/static_files/static && \
+    chown -R trombei-prod-user:trombei-prod-group /api && \
+    # im not sure about 777 here, should be 755?
+    chmod -R 777 /vol
+
+ENV PATH="/venv/bin:$PATH"
+
+USER trombei-prod-user
