@@ -92,8 +92,8 @@ class PlaceAPITest(APITestCase):
         self.client.force_authenticate(user=self.user_1)
 
         data = {
-            "name": "Casa theus e bia",
-            "full_address": "Rua de casa",
+            "name": "Casa João e Maria",
+            "full_address": "Rua da casa do João e a Maria",
             "direction_urls": [
                 {
                     "type": "GOOGLE-MAPS",

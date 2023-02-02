@@ -23,6 +23,11 @@ make run
 make tests
 ```
 
+### Lint (flake8)
+```commandline
+make lint
+```
+
 ## Run with Gunicorn, Nginx and Postgres
 ```commandline
 make run_staging

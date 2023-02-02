@@ -24,7 +24,9 @@ class DirectionUrl(models.Model):
         GOOGLE_MAPS = "GOOGLE-MAPS"
         UBER = "UBER"
 
-    place = models.ForeignKey("places.Place", on_delete=models.CASCADE)
+    place = models.ForeignKey(
+        "places.Place", on_delete=models.CASCADE, related_name="direction_urls"
+    )
     type = models.CharField("type", max_length=32, choices=DirectionType.choices)
     url = models.URLField("url", max_length=512)
     unique_together = ["place", "type"]
@@ -34,6 +36,7 @@ class DirectionUrlSerializer(serializers.ModelSerializer):
     class Meta:
         model = DirectionUrl
         fields = ["type", "url"]
+        # fields = "__all__"
 
 
 class PlaceUserReadOnlySerializer(serializers.ModelSerializer):
@@ -59,25 +62,10 @@ class PlaceSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        if validated_data.get("direction_urls"):
-            direction_urls_data = validated_data.pop("direction_urls")
-            place = Place.objects.create(**validated_data)
+        direction_urls = validated_data.pop("direction_urls", None)
+        place = Place.objects.create(**validated_data)
 
-            for url in direction_urls_data:
+        if direction_urls is not None:
+            for url in direction_urls:
                 DirectionUrl.objects.create(place=place, **url)
-
-            return place
-
-        return Place.objects.create(**validated_data)
-
-        # import pdb
-
-        # pdb.set_trace()
-        # place = Place.objects.create(**validated_data)
-
-        # if validated_data.get("direction_urls"):
-        #     direction_urls_data = validated_data.pop("direction_urls")
-        #     for url in direction_urls_data:
-        #         DirectionUrl.objects.create_or_update(place=place, **url)
-
-        # return place
+        return place
