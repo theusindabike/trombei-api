@@ -1,0 +1,44 @@
+name: 🚀 Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+
+jobs:
+  app-release:
+    # TODO(mugbug): only use macos for iOS builds
+    runs-on: macos-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: dart
+          path: app
+          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false},{"type":"test","section":"Automated Tests","hidden":false},{"type":"refactor","section":"Improvements","hidden":false},{"type":"ci","section":"Process Automation","hidden":false}]'
+
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v2
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+        if: ${{ steps.release.outputs.release_created }}
+
+      # TODO: create and add CERTIFICATES_REPO_DEPLOY_KEY to repo secrets
+      - name: 🔑 Install deploy key to get access to certificates' repository
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.CERTIFICATES_REPO_DEPLOY_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+        if: ${{ steps.release.outputs.release_created }}
+
+      # TODO: add DOT_ENV_FILE to repo secrets
+      - name: 🔑 Create .env.default file with credentials
+        run: ${{ secrets.DOT_ENV_FILE }} > ios/.env.default
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: 📲 Publish beta version to TestFlight
+        run: make beta_ios
+        if: ${{ steps.release.outputs.release_created }}
