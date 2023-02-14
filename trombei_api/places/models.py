@@ -69,3 +69,27 @@ class PlaceSerializer(serializers.ModelSerializer):
             for url in direction_urls:
                 DirectionUrl.objects.create(place=place, **url)
         return place
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get("name", instance.name)
+        instance.full_address = validated_data.get(
+            "full_address", instance.full_address
+        )
+        instance.image = validated_data.get("image", instance.image)
+        instance.save()
+
+        direction_urls = validated_data.get("direction_urls")
+
+        for d in direction_urls:
+
+            d_type = d.get("type", None)
+            d_place = d.get("place", None)
+            if d_type and d_place:
+                d_item = DirectionUrl.objects.get(type=d_type, place=instance)
+                d_item.type = d.get("type", d_item.type)
+                d_item.url = d.get("url", d_item.url)
+                d_item.save()
+            else:
+                DirectionUrl.objects.create(place=instance, **d)
+
+        return instance
