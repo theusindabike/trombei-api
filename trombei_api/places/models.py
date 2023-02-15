@@ -25,7 +25,7 @@ class DirectionUrl(models.Model):
         UBER = "UBER"
 
     place = models.ForeignKey(
-        "places.Place", on_delete=models.CASCADE, related_name="direction_urls"
+        Place, related_name="direction_urls", on_delete=models.CASCADE
     )
     type = models.CharField("type", max_length=32, choices=DirectionType.choices)
     url = models.URLField("url", max_length=512)
@@ -33,10 +33,11 @@ class DirectionUrl(models.Model):
 
 
 class DirectionUrlSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False, write_only=False)
+
     class Meta:
         model = DirectionUrl
-        fields = ["type", "url"]
-        # fields = "__all__"
+        fields = ["id", "type", "url"]
 
 
 class PlaceUserReadOnlySerializer(serializers.ModelSerializer):
@@ -66,6 +67,26 @@ class PlaceSerializer(serializers.ModelSerializer):
         place = Place.objects.create(**validated_data)
 
         if direction_urls is not None:
-            for url in direction_urls:
-                DirectionUrl.objects.create(place=place, **url)
+            for d in direction_urls:
+                DirectionUrl.objects.create(place=place, **d)
         return place
+
+    def update(self, instance, validated_data):
+        direction_urls = validated_data.pop("direction_urls")
+
+        instance.name = validated_data.get("name", instance.name)
+        instance.full_address = validated_data.get(
+            "full_address", instance.full_address
+        )
+        instance.image = validated_data.get("image", instance.image)
+        instance.save()
+
+        remove_items = {item.id: item for item in instance.direction_urls.all()}
+
+        for item in remove_items.values():
+            item.delete()
+
+        for d in direction_urls:
+            DirectionUrl.objects.create(place=instance, **d)
+
+        return instance
