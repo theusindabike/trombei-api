@@ -30,3 +30,6 @@ migrations:
 
 clean_migrations:
 	find . -path "*/trombei_api/*/migrations/*.py" -not -name "__init__.py" -delete && find . -path "*/trombei_api/*/migrations/*.pyc"  -delete
+
+aws_ssl_init:
+	docker-compose -f docker-compose.aws.yaml run --rm certbot /opt/certify-init.sh
