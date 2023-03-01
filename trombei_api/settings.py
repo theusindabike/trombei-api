@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",
-    "dj_rest_auth.registration",
+    # "dj_rest_auth.registration",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -91,7 +91,6 @@ DATABASES = {
 #     "default": dj_database_url.parse(config("SQL_FULL_URL"), conn_max_age=600),
 # }
 
-SITE_ID = 1
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -111,12 +110,40 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
+# AUTHENTICATION_BACKENDS = [
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     "django.contrib.auth.backends.ModelBackend",
+#     # `allauth` specific authentication methods, such as login by e-mail
+#     "allauth.account.auth_backends.AuthenticationBackend",
+# ]
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         "SCOPE": [
+#             "profile",
+#             "email",
+#         ],
+#         "APP": {
+#             "client_id": config("GOOGLE_OAUTH2_LOGIN_CLIENT_ID"),
+#             "secret": config("GOOGLE_OAUTH2_LOGIN_SECRET_KEY"),
+#             "key": "",
+#         },
+#         "AUTH_PARAMS": {
+#             "access_type": "offline",
+#         },
+#         "OAUTH_PKCE_ENABLED": True,
+#         "CALLBACK_URL": config("GOOGLE_OAUTH2_CALLBACK_URL"),
+#     }
+# }
+
+
+SITE_ID = 1
+LOGIN_REDIRECT_URL = "/"
+# Additional configuration settings
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -124,16 +151,9 @@ SOCIALACCOUNT_PROVIDERS = {
             "profile",
             "email",
         ],
-        "APP": {
-            "client_id": config("GOOGLE_OAUTH2_LOGIN_CLIENT_ID"),
-            "secret": config("GOOGLE_OAUTH2_LOGIN_SECRET_KEY"),
-            "key": "",
-        },
         "AUTH_PARAMS": {
             "access_type": "offline",
         },
-        "OAUTH_PKCE_ENABLED": True,
-        "CALLBACK_URL": config("GOOGLE_OAUTH2_CALLBACK_URL"),
     }
 }
 
@@ -144,11 +164,12 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
+        # "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.IsAdminUser",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
     ],
 }
 
