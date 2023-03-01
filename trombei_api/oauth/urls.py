@@ -4,6 +4,6 @@ from . import views
 app_name = "oauth"
 
 urlpatterns = [
-    path("token/", views.GoogleLoginView.as_view(), name="oauth-google"),
-    path("code/", views.CodeView, name="code"),
+    path("google/", views.GoogleLoginView.as_view(), name="oauth-google"),
+    path("google/code/", views.CodeView, name="oauth-google-code"),
 ]

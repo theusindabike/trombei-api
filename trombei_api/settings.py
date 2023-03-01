@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",
-    # "dj_rest_auth.registration",
+    "dj_rest_auth.registration",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -110,52 +110,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTHENTICATION_BACKENDS = [
-#     # Needed to login by username in Django admin, regardless of `allauth`
-#     "django.contrib.auth.backends.ModelBackend",
-#     # `allauth` specific authentication methods, such as login by e-mail
-#     "allauth.account.auth_backends.AuthenticationBackend",
-# ]
-
-# SOCIALACCOUNT_PROVIDERS = {
-#     "google": {
-#         "SCOPE": [
-#             "profile",
-#             "email",
-#         ],
-#         "APP": {
-#             "client_id": config("GOOGLE_OAUTH2_LOGIN_CLIENT_ID"),
-#             "secret": config("GOOGLE_OAUTH2_LOGIN_SECRET_KEY"),
-#             "key": "",
-#         },
-#         "AUTH_PARAMS": {
-#             "access_type": "offline",
-#         },
-#         "OAUTH_PKCE_ENABLED": True,
-#         "CALLBACK_URL": config("GOOGLE_OAUTH2_CALLBACK_URL"),
-#     }
-# }
-
-
-SITE_ID = 1
-LOGIN_REDIRECT_URL = "/"
-# Additional configuration settings
-SOCIALACCOUNT_QUERY_EMAIL = True
-ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_REQUIRED = True
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [
             "profile",
             "email",
+            "openid",
         ],
+        "APP": {
+            "client_id": config("GOOGLE_OAUTH2_LOGIN_CLIENT_ID"),
+            "secret": config("GOOGLE_OAUTH2_LOGIN_SECRET_KEY"),
+            "key": "",
+        },
         "AUTH_PARAMS": {
             "access_type": "offline",
         },
+        "OAUTH_PKCE_ENABLED": True,
+        "CALLBACK_URL": config("GOOGLE_OAUTH2_CALLBACK_URL"),
     }
 }
+
+SITE_ID = 1
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],

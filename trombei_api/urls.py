@@ -38,6 +38,8 @@ urlpatterns = [
     ),
     path("admin/", admin.site.urls),
     re_path(r"api/(?P<version>[v1|v2]+)/oauth/", include(f"{BASE_PATH}.oauth.urls")),
+    re_path(r"^accounts/", include("allauth.urls"), name="socialaccount_signup"),
+    # url(r'^accounts/', include('allauth.urls'), name='socialaccount_signup'),
     re_path(r"api/(?P<version>[v1|v2]+)/users/", include(f"{BASE_PATH}.core.urls")),
     re_path(r"api/(?P<version>[v1|v2]+)/events/", include(f"{BASE_PATH}.events.urls")),
     re_path(
