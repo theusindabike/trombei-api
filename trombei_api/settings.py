@@ -91,7 +91,6 @@ DATABASES = {
 #     "default": dj_database_url.parse(config("SQL_FULL_URL"), conn_max_age=600),
 # }
 
-SITE_ID = 1
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -123,6 +122,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "SCOPE": [
             "profile",
             "email",
+            "openid",
         ],
         "APP": {
             "client_id": config("GOOGLE_OAUTH2_LOGIN_CLIENT_ID"),
@@ -137,6 +137,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+SITE_ID = 1
+
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_PAGINATION_CLASS": "trombei_api.pagination.StandardResultsSetPagination",
@@ -145,6 +147,7 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.IsAdminUser",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",

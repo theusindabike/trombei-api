@@ -14,7 +14,7 @@ cp contrib/env-sample .env
 
 ## Developing
 
-### Local Runserver:
+### Run local with Django runserver:
 ```commandline
 make run
 ```
@@ -34,11 +34,25 @@ make run_staging
 ```
 
 ## Open API
-Available in http://127.0.0.1/swagger/ and http://127.0.0.1/redoc/
+Available at: http://localhost/swagger/ and http://localhost/redoc/
+
+
+## Simulating Google OAuth Login via Web
+1. Access
+    ```console
+    https://accounts.google.com/o/oauth2/v2/auth?client_id=<<GOOGLE_OAUTH2_LOGIN_CLIENT_ID>>&response_type=code&scope=openid%20email%20profile&access_type=offline&redirect_uri=<<CALLBACK_URL>>
+    ```
+2. Copy the returned **Code** in url param<br />
+3. Make a http POST to http://localhost/api/v1/oauth/google passing that **Code** <br />
+4. Now you should have a Token <br />
+5. Finnaly, you can access a protected endpoint with that token as Authorization Header, for example: <br />
+    ```console
+    curl -H "Authorization: Token 123499d1c57d1d4e456c6009416b8a089cfa789" http://localhost/api/v1/users/me/
+    ```
 
 
 
-## Built With
+## Built with
 1. docker-compose
 2. django
 3. postgres
