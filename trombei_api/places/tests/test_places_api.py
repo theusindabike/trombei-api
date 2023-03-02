@@ -5,7 +5,8 @@ from rest_framework.test import APITestCase, APIClient
 
 from trombei_api.places.models import Place, DirectionUrl
 
-PLACE_CREATE_AND_LIST_URL = reverse("places:place-list", kwargs={"version": "v1"})
+PLACE_LIST_CREATE_URL = reverse("places:place-list-create", kwargs={"version": "v1"})
+PLACE_RUD = "places:place-rud"
 
 
 class PlaceAPITest(APITestCase):
@@ -14,6 +15,7 @@ class PlaceAPITest(APITestCase):
     def setUp(self):
         self.user_1 = User.objects.get(pk=1)
         self.user_2 = User.objects.get(pk=2)
+        self.admin_user = User.objects.get(pk=3)
         self.client = APIClient()
 
     def tearDown(self):
@@ -26,9 +28,9 @@ class PlaceAPITest(APITestCase):
 
         place = Place.objects.get(id="00000000-0000-0000-0000-000000000003")
 
-        self.client.force_authenticate(user=self.user_2)
+        self.client.force_authenticate(user=self.user_1)
 
-        url = reverse("places:place-detail", kwargs={"version": "v1", "pk": place.id})
+        url = reverse(PLACE_RUD, kwargs={"version": "v1", "pk": place.id})
 
         response = self.client.get(url)
 
@@ -41,55 +43,77 @@ class PlaceAPITest(APITestCase):
             response.data.get("full_address"),
             "R. Waldomiro Martini, 98 - Centro, Mogi Guaçu - SP, 13840-054",
         )
-        self.assertEqual(response.data.get("owner").get("username"), "user_2")
+        self.assertEqual(response.data.get("owner").get("username"), "admin_user")
 
     def test_list(self):
         """
-        Ensure we can list all logged user places
+        Ensure we can list all places
         """
         self.client.force_authenticate(user=self.user_1)
 
-        response = self.client.get(PLACE_CREATE_AND_LIST_URL)
+        response = self.client.get(PLACE_LIST_CREATE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get("count"), 2)
+        self.assertEqual(response.data.get("count"), 3)
 
     def test_create(self):
         """
         Ensure we can create a Place
         """
-        self.client.force_authenticate(user=self.user_1)
+        self.client.force_authenticate(user=self.admin_user)
 
         data = {"name": "Casa theus e bia", "full_address": "Rua de casa"}
-        response = self.client.post(PLACE_CREATE_AND_LIST_URL, data=data)
+        response = self.client.post(PLACE_LIST_CREATE_URL, data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data.get("name"), data["name"])
 
     def test_delete(self):
         """
-        Ensure we can delete a Place
+        Ensure a admin user can delete a Place
         """
-        self.client.force_authenticate(user=self.user_1)
+        self.client.force_authenticate(user=self.admin_user)
 
         data = {"name": "Casa theus e bia", "full_address": "Rua de casa"}
-        response = self.client.post(PLACE_CREATE_AND_LIST_URL, data=data)
+        response = self.client.post(PLACE_LIST_CREATE_URL, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data.get("name"), data["name"])
 
         url = reverse(
-            "places:place-detail",
+            PLACE_RUD,
             kwargs={"version": "v1", "pk": response.data.get("id")},
         )
         delete_response = self.client.delete(url)
 
         self.assertEqual(delete_response.status_code, status.HTTP_204_NO_CONTENT)
 
+    def test_non_admin_user_cant_delete(self):
+        """
+        Ensure that a non admin user cant delete a Place
+        """
+        self.client.force_authenticate(user=self.admin_user)
+
+        data = {"name": "Casa theus e bia", "full_address": "Rua de casa"}
+        response = self.client.post(PLACE_LIST_CREATE_URL, data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data.get("name"), data["name"])
+
+        self.client.force_authenticate(user=self.user_1)
+
+        url = reverse(
+            PLACE_RUD,
+            kwargs={"version": "v1", "pk": response.data.get("id")},
+        )
+        delete_response = self.client.delete(url)
+
+        self.assertEqual(delete_response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_direction_urls(self):
         """
         Ensure we can add mutiples direction urls
         """
 
-        self.client.force_authenticate(user=self.user_1)
+        self.client.force_authenticate(user=self.admin_user)
 
         data = {
             "name": "Casa João e Maria",
@@ -105,7 +129,7 @@ class PlaceAPITest(APITestCase):
                 },
             ],
         }
-        response = self.client.post(PLACE_CREATE_AND_LIST_URL, data=data)
+        response = self.client.post(PLACE_LIST_CREATE_URL, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(response.data.get("direction_urls")), 2)
@@ -117,9 +141,9 @@ class PlaceAPITest(APITestCase):
 
         place = Place.objects.get(id="00000000-0000-0000-0000-000000000001")
 
-        self.client.force_authenticate(user=self.user_1)
+        self.client.force_authenticate(user=self.admin_user)
 
-        url = reverse("places:place-detail", kwargs={"version": "v1", "pk": place.id})
+        url = reverse(PLACE_RUD, kwargs={"version": "v1", "pk": place.id})
 
         existing_place = self.client.get(url).data
 
@@ -136,7 +160,7 @@ class PlaceAPITest(APITestCase):
 
         existing_place["direction_urls"] = direction_urls
 
-        url = reverse("places:place-detail", kwargs={"version": "v1", "pk": place.id})
+        url = reverse(PLACE_RUD, kwargs={"version": "v1", "pk": place.id})
 
         response = self.client.put(url, data=existing_place)
 
@@ -149,7 +173,7 @@ class PlaceAPITest(APITestCase):
         Ensure we can update directions urls and place
         """
 
-        self.client.force_authenticate(user=self.user_1)
+        self.client.force_authenticate(user=self.admin_user)
 
         place_with_directions = {
             "name": "Place Name 1",
@@ -161,9 +185,7 @@ class PlaceAPITest(APITestCase):
                 }
             ],
         }
-        response = self.client.post(
-            PLACE_CREATE_AND_LIST_URL, data=place_with_directions
-        )
+        response = self.client.post(PLACE_LIST_CREATE_URL, data=place_with_directions)
         existing_place = response.data
 
         updated_place_name = "Place Name 2"
@@ -182,7 +204,7 @@ class PlaceAPITest(APITestCase):
         existing_place["name"] = updated_place_name
 
         url = reverse(
-            "places:place-detail",
+            PLACE_RUD,
             kwargs={"version": "v1", "pk": existing_place.get("id")},
         )
 
