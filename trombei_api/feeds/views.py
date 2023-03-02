@@ -1,10 +1,7 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
-from django_filters.rest_framework import DjangoFilterBackend
-
-from trombei_api.filters import LoggedUserFilter, FeedFilter
+from trombei_api.filters import FeedFilter
 from trombei_api.events.models import Event, EventSerializer
 
 
