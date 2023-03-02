@@ -43,7 +43,10 @@ Available at: http://localhost/swagger/ and http://localhost/redoc/
     https://accounts.google.com/o/oauth2/v2/auth?client_id=<<GOOGLE_OAUTH2_LOGIN_CLIENT_ID>>&response_type=code&scope=openid%20email%20profile&access_type=offline&redirect_uri=<<CALLBACK_URL>>
     ```
 2. Copy the returned **Code** in url param<br />
-3. Make a http POST to http://localhost/api/v1/oauth/google passing that **Code** <br />
+3. Make a POST to http://localhost/api/v1/oauth/google passing that **Code**, for example: <br />
+    ```console
+    curl --data "code=4/0aaabbb7ZThsWhHh9zB93MiinOAaSFcKsPdwXdYy_NkpqC8xAOclp33F1_0zK4P9fU9Wzzzz" https://trombei.com/api/v1/oauth/google/
+    ```
 4. Now you should have a Token <br />
 5. Finnaly, you can access a protected endpoint with that token as Authorization Header, for example: <br />
     ```console

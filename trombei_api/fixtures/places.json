@@ -4,7 +4,7 @@
     "pk": "00000000-0000-0000-0000-000000000001",
     "fields": {
       "name": "Tábuas Bar",
-      "owner": 1,
+      "owner": 3,
       "full_address": "Av. Santa Isabel, 57 - Barão Geraldo, Campinas - SP, 13084-012",
       "created_at": "2022-04-01T19:43:16.058Z"
     }
@@ -13,8 +13,8 @@
     "model": "places.place",
     "pk": "00000000-0000-0000-0000-000000000002",
     "fields": {
-      "name": "Merchant logo Cervejaria Garimpero",
-      "owner": 1,
+      "name": "Cervejaria Garimpero",
+      "owner": 3,
       "full_address": "Av. Santa Isabel, 462 - Vila Santa Isabel, Campinas - SP, 13084-643",
       "created_at": "2022-04-01T19:43:16.058Z"
     }
@@ -23,7 +23,7 @@
     "model": "places.place",
     "pk": "00000000-0000-0000-0000-000000000003",
     "fields": {
-      "owner": 2,
+      "owner": 3,
       "name": "Hoppie Tap House",
       "full_address": "R. Waldomiro Martini, 98 - Centro, Mogi Guaçu - SP, 13840-054",
       "created_at": "2022-04-01T19:43:16.058Z"
