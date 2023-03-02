@@ -52,7 +52,7 @@ class EventAPITest(APITestCase):
 
         response = self.client.get(EVENT_CREATE_AND_LIST_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get("count"), 6)
+        self.assertEqual(response.data.get("count"), 9)
 
     def test_create(self):
         """

@@ -89,5 +89,83 @@
       "date": "2022-07-01T17:26:41.134Z",
       "created_at": "2022-07-01T17:26:41.134Z"
     }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000008",
+    "fields": {
+      "owner": 1,
+      "title": "event title 8",
+      "content": "event content 8",
+      "status": "PUBLISHED",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-07-01T17:26:41.134Z",
+      "created_at": "2022-07-01T17:26:41.134Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000009",
+    "fields": {
+      "owner": 1,
+      "title": "event title 9",
+      "content": "event content 9",
+      "status": "PUBLISHED",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-07-01T17:26:41.134Z",
+      "created_at": "2022-07-01T17:26:41.134Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000010",
+    "fields": {
+      "owner": 1,
+      "title": "event title 10",
+      "content": "event content 10",
+      "status": "PUBLISHED",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-07-01T17:26:41.134Z",
+      "created_at": "2022-07-01T17:26:41.134Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000011",
+    "fields": {
+      "owner": 2,
+      "title": "event title 11",
+      "content": "event content 11",
+      "status": "PUBLISHED",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-07-01T17:26:41.134Z",
+      "created_at": "2022-07-01T17:26:41.134Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000012",
+    "fields": {
+      "owner": 2,
+      "title": "event title 12",
+      "content": "event content 12",
+      "status": "PUBLISHED",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-07-01T17:26:41.134Z",
+      "created_at": "2022-07-01T17:26:41.134Z"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": "00000000-0000-0000-0000-000000000013",
+    "fields": {
+      "owner": 2,
+      "title": "event title 13",
+      "content": "event content 13",
+      "status": "PUBLISHED",
+      "place": "00000000-0000-0000-0000-000000000001",
+      "date": "2022-07-01T17:26:41.134Z",
+      "created_at": "2022-07-01T17:26:41.134Z"
+    }
   }
 ]

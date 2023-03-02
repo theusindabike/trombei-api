@@ -1,6 +1,9 @@
-from django_filters import FilterSet, AllValuesFilter, ChoiceFilter, DateFilter
+from django_filters import (
+    FilterSet,
+    DateFilter,
+    CharFilter,
+)
 from rest_framework import filters
-
 from trombei_api.events.models import Event
 
 
@@ -9,13 +12,11 @@ class LoggedUserFilter(filters.BaseFilterBackend):
         return queryset.filter(owner=request.user)
 
 
-class EventFilter(FilterSet):
-    from_created_at = DateFilter(field_name='created_at', lookup_expr='gte')
-    to_created_at = DateFilter(field_name='created_at', lookup_expr='lte')
-    title = AllValuesFilter(field_name='title')
-    content = AllValuesFilter(field_name='content')
-    status = ChoiceFilter(field_name='status', choices=Event.EventStatus.choices)
+class FeedFilter(FilterSet):
+    title = CharFilter(field_name="title", lookup_expr="icontains")
+    content = CharFilter(field_name="content", lookup_expr="icontains")
+    date = DateFilter(field_name="date", lookup_expr="gte")
 
     class Meta:
         model = Event
-        fields = ['title', 'content', 'status', 'created_at']
+        fields = ["title", "content", "date"]

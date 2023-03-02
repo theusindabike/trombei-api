@@ -42,6 +42,7 @@ urlpatterns = [
     # url(r'^accounts/', include('allauth.urls'), name='socialaccount_signup'),
     re_path(r"api/(?P<version>[v1|v2]+)/users/", include(f"{BASE_PATH}.core.urls")),
     re_path(r"api/(?P<version>[v1|v2]+)/events/", include(f"{BASE_PATH}.events.urls")),
+    re_path(r"api/(?P<version>[v1|v2]+)/feed/", include(f"{BASE_PATH}.feeds.urls")),
     re_path(
         r"api/(?P<version>[v1|v2]+)/places/",
         include(f"{BASE_PATH}.places.urls"),
