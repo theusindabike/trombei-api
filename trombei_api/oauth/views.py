@@ -15,7 +15,7 @@ class GoogleLoginView(SocialLoginView):
 
 
 @api_view(["GET"])
-def CodeView(request):
+def CodeView(request, *args, **kwargs):
     if request.method == "GET":
         code = urllib.parse.unquote(request.query_params["code"])
         return Response({"code": code})
