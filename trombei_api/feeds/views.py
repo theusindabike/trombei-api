@@ -5,7 +5,7 @@ from trombei_api.filters import FeedFilter
 from trombei_api.events.models import Event, EventSerializer
 
 
-class FeedList(generics.ListCreateAPIView):
+class FeedList(generics.ListAPIView):
     queryset = (
         Event.objects.prefetch_related("place")
         .filter(status=Event.EventStatus.PUBLISHED)
