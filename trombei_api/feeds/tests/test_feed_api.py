@@ -3,6 +3,8 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
+from trombei_api.events.models import Event
+
 FEED_LIST_URL = reverse("feeds:feed-list", kwargs={"version": "v1"})
 
 
@@ -21,7 +23,18 @@ class EventAPITest(APITestCase):
         """
         Ensure we can list Events in a feed
         """
-        self.client.force_authenticate(user=self.user_1)
+
+        event = Event.objects.get(id=8)
+
+        url = reverse("feeds:feed-detail", kwargs={"version": "v1", "pk": event.id})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_feed_item(self):
+        """
+        Ensure we can get a feed item
+        """
 
         response = self.client.get(FEED_LIST_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -31,7 +44,6 @@ class EventAPITest(APITestCase):
         """
         Ensure we can filter Events by title
         """
-        self.client.force_authenticate(user=self.user_1)
 
         response = self.client.get(FEED_LIST_URL, {"title": "title 11"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -41,7 +53,6 @@ class EventAPITest(APITestCase):
         """
         Ensure we can filter Events by title
         """
-        self.client.force_authenticate(user=self.user_1)
 
         response = self.client.get(
             FEED_LIST_URL, {"place": "00000000-0000-0000-0000-000000000002"}

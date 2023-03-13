@@ -9,7 +9,6 @@ from trombei_api.events.models import Event, EventSerializer
 
 
 class EventList(generics.ListCreateAPIView):
-    queryset = Event.objects.all().order_by("-created_at")
     serializer_class = EventSerializer
     filter_backends = [LoggedUserFilter, DjangoFilterBackend]
     authentication_classes = [TokenAuthentication]
@@ -18,10 +17,15 @@ class EventList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def get_queryset(self):
+        return Event.objects.all().order_by("-date").filter(owner=self.request.user)
+
 
 class EventDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Event.objects.all().order_by("id")
     serializer_class = EventSerializer
-    filter_backends = [LoggedUserFilter, DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend]
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Event.objects.all().order_by("-date").filter(owner=self.request.user)
