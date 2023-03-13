@@ -16,14 +16,15 @@ class EventAPITest(APITestCase):
     def setUp(self):
         self.user_1 = User.objects.get(pk=1)
         self.user_2 = User.objects.get(pk=2)
+        self.admin_user = User.objects.get(pk=3)
         self.client = APIClient()
 
     def tearDown(self):
         self.client.force_authenticate(user=None)
 
-    def test_get(self):
+    def test_get_published_event(self):
         """
-        Ensure we can get a event object.
+        Ensure we can get a event object if is published.
         """
         event = Event.objects.get(id=1)
 
@@ -44,12 +45,27 @@ class EventAPITest(APITestCase):
             "Av. Santa Isabel, 57 - Barão Geraldo, Campinas - SP, 13084-012",
         )
 
-    def test_list(self):
+    def test_get_draft_event(self):
+        """
+        Ensure we can't get a draft event when user is not owner
+        """
+        event = Event.objects.get(id=1)
+
+        self.client.force_authenticate(user=self.user_2)
+
+        url = reverse("events:event-detail", kwargs={"version": "v1", "pk": event.id})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_list_logged_user_events(self):
         """
         Ensure we can list all logged user events
         """
+
         self.client.force_authenticate(user=self.user_1)
 
+        # response = self.client.get(LOGGED_USER_EVENT_LIST_URL)
         response = self.client.get(EVENT_CREATE_AND_LIST_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("count"), 9)

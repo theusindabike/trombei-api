@@ -13,7 +13,7 @@ class PlaceListCreate(generics.ListCreateAPIView):
     def get_permissions(self):
         if self.request.method in ["POST"]:
             return [IsAdminUser()]
-        return [IsAuthenticated()]
+        return []
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -22,11 +22,10 @@ class PlaceListCreate(generics.ListCreateAPIView):
 class PlaceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Place.objects.all().order_by("id")
     serializer_class = PlaceSerializer
-    # filterset_class = PlaceFilter
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
         if self.request.method in ["PUT", "DELETE"]:
             return [IsAdminUser()]
-        return [IsAuthenticated()]
+        return []

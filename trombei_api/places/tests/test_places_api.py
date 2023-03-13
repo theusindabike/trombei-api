@@ -28,8 +28,6 @@ class PlaceAPITest(APITestCase):
 
         place = Place.objects.get(id="00000000-0000-0000-0000-000000000003")
 
-        self.client.force_authenticate(user=self.user_1)
-
         url = reverse(PLACE_RUD, kwargs={"version": "v1", "pk": place.id})
 
         response = self.client.get(url)
@@ -49,7 +47,6 @@ class PlaceAPITest(APITestCase):
         """
         Ensure we can list all places
         """
-        self.client.force_authenticate(user=self.user_1)
 
         response = self.client.get(PLACE_LIST_CREATE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
