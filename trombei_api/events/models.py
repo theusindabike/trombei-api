@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from django.conf import settings
 
 from trombei_api.places.models import Place, PlaceSerializer
 
@@ -14,7 +14,7 @@ class Event(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
-        "auth.User", related_name="Events", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL, related_name="Events", on_delete=models.CASCADE
     )
     title = models.CharField("title", max_length=128)
     content = models.CharField("content", max_length=255)
@@ -31,8 +31,8 @@ class Event(models.Model):
 
 class EventUserReadSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ("username", "email")
+        model = settings.AUTH_USER_MODEL
+        fields = ("first_name", "email")
 
 
 class EventSerializer(serializers.ModelSerializer):

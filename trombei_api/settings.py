@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "trombei_api.places",
 ]
 
-AUTH_USER_MODEL = "trombei_api.core.models.User"
+AUTH_USER_MODEL = "core.TrombeiUser"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

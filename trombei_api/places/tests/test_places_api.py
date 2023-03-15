@@ -43,7 +43,7 @@ class PlaceAPITest(APITestCase):
             response.data.get("full_address"),
             "R. Waldomiro Martini, 98 - Centro, Mogi Guaçu - SP, 13840-054",
         )
-        self.assertEqual(response.data.get("owner").get("username"), "admin_user")
+        self.assertEqual(response.data.get("owner").get("email"), "admin@email.com")
 
     def test_list(self):
         """

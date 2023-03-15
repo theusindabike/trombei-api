@@ -1,14 +1,15 @@
 import uuid
 
 from django.db import models
-from django.contrib.auth.models import User
+
+from django.conf import settings
 from rest_framework import serializers
 
 
 class Place(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
-        "auth.User", related_name="Places", on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL, related_name="Places", on_delete=models.CASCADE
     )
     name = models.CharField("name", max_length=128)
     full_address = models.CharField("full_address", max_length=255)
@@ -42,8 +43,8 @@ class DirectionUrlSerializer(serializers.ModelSerializer):
 
 class PlaceUserReadOnlySerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ["username", "email"]
+        model = settings.AUTH_USER_MODEL
+        fields = ["first_name", "email"]
 
 
 class PlaceSerializer(serializers.ModelSerializer):
