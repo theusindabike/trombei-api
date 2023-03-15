@@ -38,7 +38,7 @@ class EventAPITest(APITestCase):
             response.data.get("id"), "00000000-0000-0000-0000-000000000001"
         )
         self.assertEqual(response.data.get("title"), "event title 1")
-        self.assertEqual(response.data.get("owner").get("username"), "user_1")
+        self.assertEqual(response.data.get("owner").get("email"), "user_1@email.com")
         self.assertEqual(response.data.get("place").get("name"), "Tábuas Bar")
         self.assertEqual(
             response.data.get("place").get("full_address"),
